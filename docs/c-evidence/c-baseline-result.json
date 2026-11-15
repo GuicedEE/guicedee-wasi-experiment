@@ -1,0 +1,56 @@
+{
+  "probe": "c-baseline",
+  "timestamp_utc": "2026-11-15T16:37:36.726001+00:00",
+  "status": "PASS",
+  "steps": [
+    {
+      "name": "java-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.073,
+      "log": "java-version.log"
+    },
+    {
+      "name": "maven-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.687,
+      "log": "maven-version.log"
+    },
+    {
+      "name": "wasmtime-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.019,
+      "log": "wasmtime-version.log"
+    },
+    {
+      "name": "compile-c",
+      "exit_code": 0,
+      "elapsed_seconds": 5.057,
+      "log": "compile-c.log"
+    },
+    {
+      "name": "clang-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.011,
+      "log": "clang-version.log"
+    },
+    {
+      "name": "compile-wasm",
+      "exit_code": 0,
+      "elapsed_seconds": 2.307,
+      "log": "compile-wasm.log"
+    },
+    {
+      "name": "execute-wasi",
+      "exit_code": 0,
+      "elapsed_seconds": 0.071,
+      "log": "execute-wasi.log"
+    }
+  ],
+  "http_component_tested": false,
+  "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+  "compatibility_extension": false,
+  "wasm_bytes": 516400,
+  "wasm_sha256": "1d9ee5215a571ce9ad0719a33f725f0abc52f039fc84ee16defb6a99ec396a41",
+  "marker_found": true,
+  "failed_gate": null
+}

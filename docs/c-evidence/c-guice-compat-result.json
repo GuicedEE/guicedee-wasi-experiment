@@ -1,0 +1,42 @@
+{
+  "probe": "c-guice-compat",
+  "timestamp_utc": "2026-11-15T16:38:41.226599+00:00",
+  "status": "FAIL",
+  "steps": [
+    {
+      "name": "java-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.07,
+      "log": "java-version.log"
+    },
+    {
+      "name": "maven-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.754,
+      "log": "maven-version.log"
+    },
+    {
+      "name": "wasmtime-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.016,
+      "log": "wasmtime-version.log"
+    },
+    {
+      "name": "build-compatibility",
+      "exit_code": 0,
+      "elapsed_seconds": 3.384,
+      "log": "build-compatibility.log"
+    },
+    {
+      "name": "compile-c",
+      "exit_code": 1,
+      "elapsed_seconds": 7.158,
+      "log": "compile-c.log"
+    }
+  ],
+  "http_component_tested": false,
+  "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+  "compatibility_extension": true,
+  "failed_gate": "Java to C compilation",
+  "missing_api_diagnostics": 28
+}

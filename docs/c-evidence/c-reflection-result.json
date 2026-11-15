@@ -1,0 +1,62 @@
+{
+  "probe": "c-reflection",
+  "timestamp_utc": "2026-11-15T16:35:22.060226+00:00",
+  "status": "PASS",
+  "steps": [
+    {
+      "name": "java-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.068,
+      "log": "java-version.log"
+    },
+    {
+      "name": "maven-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.646,
+      "log": "maven-version.log"
+    },
+    {
+      "name": "wasmtime-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.015,
+      "log": "wasmtime-version.log"
+    },
+    {
+      "name": "build-compatibility",
+      "exit_code": 0,
+      "elapsed_seconds": 3.469,
+      "log": "build-compatibility.log"
+    },
+    {
+      "name": "compile-c",
+      "exit_code": 0,
+      "elapsed_seconds": 5.338,
+      "log": "compile-c.log"
+    },
+    {
+      "name": "clang-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.023,
+      "log": "clang-version.log"
+    },
+    {
+      "name": "compile-wasm",
+      "exit_code": 0,
+      "elapsed_seconds": 3.352,
+      "log": "compile-wasm.log"
+    },
+    {
+      "name": "execute-wasi",
+      "exit_code": 0,
+      "elapsed_seconds": 0.08,
+      "log": "execute-wasi.log"
+    }
+  ],
+  "http_component_tested": false,
+  "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+  "compatibility_extension": true,
+  "wasm_bytes": 553637,
+  "wasm_sha256": "d2175741a2f3ee45695966145909a66c7413273579c7d8274352444fc583a5f9",
+  "marker_found": true,
+  "failed_gate": null
+}

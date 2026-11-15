@@ -1,0 +1,1 @@
+WASI_RUNTIME_OK heap-gc array-clone timer

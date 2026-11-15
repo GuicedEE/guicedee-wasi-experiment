@@ -3,17 +3,24 @@
 Private, isolated feasibility tests for **Java 25 and actual Guice on standalone WASI**.
 This is not a production runtime or a claim that GuicedEE services already run on WebAssembly.
 
-**Initial result:** Java/WASI passes; both real-Guice WASI probes fail compilation while all three JVM tests pass.
-See [the captured experiment results](docs/results-2026-11-15.md).
+**Current result:** the new TeaVM 0.16 C → wasi-sdk route runs Java, selected reflection operations, heap/GC,
+array cloning and timers in standalone Wasmtime. Actual Guice remains blocked by missing Java APIs, even with
+the isolated reflection-only compatibility profile. See [the compatibility experiment](docs/c-wasi-compatibility.md)
+and [the original baseline](docs/results-2026-11-15.md).
 
 ## Gates
 
 | Probe | What it verifies | What it does not establish |
 | --- | --- | --- |
-| `jvm` | All three probes work on the JVM, including constructor injection, providers, singleton scope, an explicit request scope, and real method interception | WASI compatibility |
+| `jvm` | All five tests work on the JVM, including injection, scopes, interception, reflection and runtime checks | WASI compatibility |
 | `baseline` | Java 25 bytecode compiles to WASI and runs in Wasmtime: allocation, collections, exceptions and stdout | HTTP/component interfaces or Guice |
 | `guice-minimal` | Constructor injection with no application interceptor or custom scope registration | Full Guice functionality |
 | `guice` | The same Guice probe compiles and runs under WASI | Full GuicedEE bootstrap, Vert.x CallScoper or integrations |
+| `c-baseline` | Original Java probe through TeaVM 0.16 C + wasi-sdk | Guice or HTTP |
+| `c-runtime` | Heap growth/GC, independent array clones and a cooperative timer | OS threads or general scheduler compatibility |
+| `c-reflection` | Reflective constructor/method invocation, constructor annotations and generic field metadata | Complete JDK reflection or Guice |
+| `c-guice-minimal` | Unmodified Guice constructor probe through the new C route | Full framework compatibility |
+| `c-guice-compat` | Real Guice with explicit reflection-only compiler substitutions | Interception, which this separate profile rejects |
 
 Each gate returns nonzero on compilation failure, runtime failure, timeout, or missing success output.
 The workflow keeps failed gates red and uploads their logs. A working baseline must not mask a failed Guice probe.
@@ -29,9 +36,16 @@ python scripts/run_probe.py jvm
 python scripts/run_probe.py baseline
 python scripts/run_probe.py guice-minimal
 python scripts/run_probe.py guice
+python scripts/run_probe.py c-baseline
+python scripts/run_probe.py c-runtime
+python scripts/run_probe.py c-reflection
+python scripts/run_probe.py c-guice-minimal
+python scripts/run_probe.py c-guice-compat
 ```
 
 Logs and machine-readable results are under `target/evidence/<probe>`; Wasm output is under `target/wasi/<probe>`.
+C-route output is under `target/c/<probe>`; its pinned, checksum-verified wasi-sdk 34 is downloaded into `.tools`.
+The SDK download is approximately 619 MB on Windows or 192 MB on Linux. Set `WASI_SDK_PATH` for an existing SDK.
 Dependencies resolve from Maven Central through an isolated `.cache/m2` repository and an empty settings file,
 so locally modified DevSuite artifacts and personal Maven repository settings cannot silently influence the baseline.
 
@@ -46,7 +60,7 @@ Use `mvnw.cmd` on Windows. For Guice, use `-Dprobe=guice` and `-Dprobe.mainClass
 ## Deliberate boundaries
 
 - Published GuicedEE **2.5.1** is pinned. The current DevSuite checkout uses 2.6.0, which was not available from Maven Central when this experiment was created. This does not test its unpublished native-image additions.
-- TeaVM **0.13.0** is pinned because it supports Java 25 and exposes `WEBASSEMBLY_WASI`. Current TeaVM's documented WasmGC path requires a JavaScript loader and is a different target.
+- Original probes pin TeaVM **0.13.0** because it supports Java 25 and exposes `WEBASSEMBLY_WASI`. The separate `c-*` probes use TeaVM **0.16.0** C output, our bounded platform adapters, and wasi-sdk **34**. Neither route uses a JavaScript host.
 - The Guice dependency is `com.guicedee.modules.services:guice`, not a hand-written container. All probes use the same source on JVM and WASI.
 - The small explicit request scope tests Guice's `Scope` API. It is not a substitute for GuicedEE's Vert.x-backed `CallScoper`.
 - This initial compiler/runtime gate emits a WASI command module, **not a WASI HTTP component**. No HTTP service, browser, or JavaScript host is involved.

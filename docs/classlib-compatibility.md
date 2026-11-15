@@ -4,7 +4,7 @@ The optional `wasi-classlib` artifact supplies three small Java-library implemen
 `ConcurrentLinkedQueue`, `AtomicReferenceArray`, and a restricted `ReentrantLock` with the `Lock` interface.
 They execute in the existing TeaVM 0.16 C → wasi-sdk 34 → Wasmtime route. No existing framework source was changed.
 
-## Results on Windows (2026-11-15)
+## Results on Windows and Linux (2026-11-15)
 
 | Gate | Result |
 | --- | --- |
@@ -16,6 +16,14 @@ They execute in the existing TeaVM 0.16 C → wasi-sdk 34 → Wasmtime route. No
 The Guice compiler now resolves the queue, atomic array and inherited Guava lock operations. Actual Guice execution
 has **not** passed. A lower diagnostic count is not a compatibility percentage; resolving one dependency can expose
 additional missing APIs or runtime failures. Snapshots are in [classlib-evidence](classlib-evidence/).
+
+[GitHub Actions run 43738224885](https://github.com/GuicedEE/guicedee-wasi-experiment/actions/runs/43738224885)
+confirmed these results on Ubuntu 24.04 at source commit `8887af8c12351e2fada790551aae411627b2f49e`.
+The JVM suite passed all six tests with zero failures/errors/skips. The original baseline and all four C-route
+runtime/reflection/concurrency probes passed. All five Guice compilation jobs remained red, including the 28-to-17
+comparison with and without the class-library extension. The Linux concurrency executable was 652,848 bytes;
+its success markers, hash and the other gate outcomes are preserved in [linux-results.json](classlib-evidence/linux-results.json).
+Full compiler/runtime logs, generated C and Wasm binaries are attached to the run.
 
 ## Implemented behavior
 

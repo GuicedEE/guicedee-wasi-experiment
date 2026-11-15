@@ -1,0 +1,133 @@
+{
+  "source_commit": "8887af8c12351e2fada790551aae411627b2f49e",
+  "ci_run": "https://github.com/GuicedEE/guicedee-wasi-experiment/actions/runs/43738224885",
+  "runner": "ubuntu-24.04",
+  "jvm_tests": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "concurrency_stdout": [
+    "WASI_CONCURRENCY_LIMITS_OK blocking timed condition fair rejected",
+    "WASI_CONCURRENCY_OK queue identity-cas update-retry lock-owner cooperative-thread"
+  ],
+  "results": [
+    {
+      "probe": "baseline",
+      "status": "PASS",
+      "compiler_backend": "TeaVM 0.13 WASI",
+      "compatibility_extension": false,
+      "classlib_extension": false,
+      "failed_gate": null,
+      "marker_found": true,
+      "wasm_bytes": 329422,
+      "wasm_sha256": "edc9f0167ba8dc06dbf2ea158808952828e8792a8d7756709c76422568faca34",
+      "http_component_tested": false
+    },
+    {
+      "probe": "c-baseline",
+      "status": "PASS",
+      "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+      "compatibility_extension": false,
+      "classlib_extension": false,
+      "failed_gate": null,
+      "marker_found": true,
+      "wasm_bytes": 518530,
+      "wasm_sha256": "e626f128aab69c6eb35d153820440552651ce475eda23588191bccbed0cb79db",
+      "http_component_tested": false
+    },
+    {
+      "probe": "c-concurrency",
+      "status": "PASS",
+      "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+      "compatibility_extension": false,
+      "classlib_extension": true,
+      "failed_gate": null,
+      "marker_found": true,
+      "limits_marker_found": true,
+      "wasm_bytes": 652848,
+      "wasm_sha256": "68375a1e41644f8ca27c7505c0c45173e69d6054d3817f048f12fa2f593cbc00",
+      "http_component_tested": false
+    },
+    {
+      "probe": "c-guice-classlib",
+      "status": "FAIL",
+      "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+      "compatibility_extension": true,
+      "classlib_extension": true,
+      "failed_gate": "Java to C compilation",
+      "missing_api_diagnostics": 17,
+      "http_component_tested": false
+    },
+    {
+      "probe": "c-guice-compat",
+      "status": "FAIL",
+      "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+      "compatibility_extension": true,
+      "classlib_extension": false,
+      "failed_gate": "Java to C compilation",
+      "missing_api_diagnostics": 28,
+      "http_component_tested": false
+    },
+    {
+      "probe": "c-guice-minimal",
+      "status": "FAIL",
+      "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+      "compatibility_extension": false,
+      "classlib_extension": false,
+      "failed_gate": "Java to C compilation",
+      "missing_api_diagnostics": 35,
+      "http_component_tested": false
+    },
+    {
+      "probe": "c-reflection",
+      "status": "PASS",
+      "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+      "compatibility_extension": true,
+      "classlib_extension": false,
+      "failed_gate": null,
+      "marker_found": true,
+      "wasm_bytes": 555767,
+      "wasm_sha256": "5ff476b6e945cdb618eb6512891673fdf1d61cf81be6bfac7c4f19b297a70649",
+      "http_component_tested": false
+    },
+    {
+      "probe": "c-runtime",
+      "status": "PASS",
+      "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+      "compatibility_extension": false,
+      "classlib_extension": false,
+      "failed_gate": null,
+      "marker_found": true,
+      "wasm_bytes": 518188,
+      "wasm_sha256": "d8ba4ea31ea064ef17d108d8249920942da235bb992d3e31bb529d30afdad7a6",
+      "http_component_tested": false
+    },
+    {
+      "probe": "guice",
+      "status": "FAIL",
+      "compiler_backend": "TeaVM 0.13 WASI",
+      "compatibility_extension": false,
+      "classlib_extension": false,
+      "failed_gate": "WASI compilation",
+      "missing_api_diagnostics": 38,
+      "http_component_tested": false
+    },
+    {
+      "probe": "guice-minimal",
+      "status": "FAIL",
+      "compiler_backend": "TeaVM 0.13 WASI",
+      "compatibility_extension": false,
+      "classlib_extension": false,
+      "failed_gate": "WASI compilation",
+      "missing_api_diagnostics": 38,
+      "http_component_tested": false
+    },
+    {
+      "probe": "jvm",
+      "status": "PASS",
+      "http_component_tested": false
+    }
+  ]
+}

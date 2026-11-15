@@ -4,7 +4,7 @@ The TeaVM 0.16 C backend plus wasi-sdk 34 provides a working standalone-WASI rou
 and runtime operations. **Actual Guice still does not compile**, including the new reflection-only profile.
 The published GuicedEE dependency remains 2.5.1; no DevSuite framework source was modified.
 
-## Tested results (Windows, 2026-11-15)
+## Tested results (Windows and Linux, 2026-11-15)
 
 | Probe | Result | Evidence |
 | --- | --- | --- |
@@ -19,6 +19,14 @@ The published GuicedEE dependency remains 2.5.1; no DevSuite framework source wa
 These diagnostic counts are observations from one graph, not a completeness percentage or an estimate of remaining effort.
 No Guice Wasm execution, HTTP component or full GuicedEE bootstrap passed in this experiment.
 Machine-readable snapshots and missing-API lists are in [c-evidence](c-evidence/).
+
+[GitHub Actions run 43737015632](https://github.com/GuicedEE/guicedee-wasi-experiment/actions/runs/43737015632)
+confirmed every result above on Ubuntu 24.04 at source commit `8bafcb8d389b2be5d406245c5bcafd664d796185`.
+All five JVM tests passed with zero failures or skips. All four Java/WASI baseline, runtime and reflection jobs
+passed execution in Wasmtime. The four Guice jobs failed at compilation, with 38 diagnostics on each original
+WASI probe, 35 on raw C, and 28 with the reflection-only compatibility extension. The overall workflow remains red.
+The Linux [result snapshot](c-evidence/linux-results.json) records artifact hashes separately; the C-route binaries
+are not byte-identical across the Windows and Linux builds. Logs, generated C and Wasm binaries are attached to the run.
 
 ## Why another compiler route
 

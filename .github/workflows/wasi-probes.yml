@@ -1,0 +1,43 @@
+name: WASI feasibility probes
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    name: ${{ matrix.probe }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        probe: [jvm, baseline, guice-minimal, guice]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Execute probe
+        run: python scripts/run_probe.py ${{ matrix.probe }}
+      - name: Preserve evidence including failed probes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasi-${{ matrix.probe }}
+          path: |
+            target/evidence/
+            target/surefire-reports/
+            target/wasi/
+          if-no-files-found: warn
+      - name: Report gate result
+        if: always()
+        run: |
+          echo '### ${{ matrix.probe }}' >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat target/evidence/${{ matrix.probe }}/result.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,42 @@
+{
+  "probe": "baseline",
+  "timestamp_utc": "2026-11-15T16:16:23.702018+00:00",
+  "status": "PASS",
+  "steps": [
+    {
+      "name": "java-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.08,
+      "log": "java-version.log"
+    },
+    {
+      "name": "maven-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.779,
+      "log": "maven-version.log"
+    },
+    {
+      "name": "wasmtime-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.012,
+      "log": "wasmtime-version.log"
+    },
+    {
+      "name": "compile-wasi",
+      "exit_code": 0,
+      "elapsed_seconds": 4.786,
+      "log": "compile-wasi.log"
+    },
+    {
+      "name": "execute-wasi",
+      "exit_code": 0,
+      "elapsed_seconds": 0.02,
+      "log": "execute-wasi.log"
+    }
+  ],
+  "http_component_tested": false,
+  "wasm_bytes": 329422,
+  "wasm_sha256": "edc9f0167ba8dc06dbf2ea158808952828e8792a8d7756709c76422568faca34",
+  "marker_found": true,
+  "failed_gate": null
+}

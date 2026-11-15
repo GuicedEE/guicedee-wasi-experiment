@@ -1,0 +1,33 @@
+{
+  "probe": "guice",
+  "timestamp_utc": "2026-11-15T16:15:05.613723+00:00",
+  "status": "FAIL",
+  "steps": [
+    {
+      "name": "java-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.063,
+      "log": "java-version.log"
+    },
+    {
+      "name": "maven-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.658,
+      "log": "maven-version.log"
+    },
+    {
+      "name": "wasmtime-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.011,
+      "log": "wasmtime-version.log"
+    },
+    {
+      "name": "compile-wasi",
+      "exit_code": 1,
+      "elapsed_seconds": 6.3,
+      "log": "compile-wasi.log"
+    }
+  ],
+  "http_component_tested": false,
+  "failed_gate": "WASI compilation"
+}

@@ -1,0 +1,26 @@
+{
+  "probe": "jvm",
+  "timestamp_utc": "2026-11-15T16:16:17.323595+00:00",
+  "status": "PASS",
+  "steps": [
+    {
+      "name": "java-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.078,
+      "log": "java-version.log"
+    },
+    {
+      "name": "maven-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.84,
+      "log": "maven-version.log"
+    },
+    {
+      "name": "jvm-tests",
+      "exit_code": 0,
+      "elapsed_seconds": 5.324,
+      "log": "jvm-tests.log"
+    }
+  ],
+  "http_component_tested": false
+}

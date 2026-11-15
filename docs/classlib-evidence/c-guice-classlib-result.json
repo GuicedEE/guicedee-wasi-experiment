@@ -1,0 +1,49 @@
+{
+  "probe": "c-guice-classlib",
+  "timestamp_utc": "2026-11-15T16:53:00.944285+00:00",
+  "status": "FAIL",
+  "steps": [
+    {
+      "name": "java-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.071,
+      "log": "java-version.log"
+    },
+    {
+      "name": "maven-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.669,
+      "log": "maven-version.log"
+    },
+    {
+      "name": "wasmtime-version",
+      "exit_code": 0,
+      "elapsed_seconds": 0.014,
+      "log": "wasmtime-version.log"
+    },
+    {
+      "name": "build-classlib",
+      "exit_code": 0,
+      "elapsed_seconds": 3.224,
+      "log": "build-classlib.log"
+    },
+    {
+      "name": "build-compatibility",
+      "exit_code": 0,
+      "elapsed_seconds": 3.482,
+      "log": "build-compatibility.log"
+    },
+    {
+      "name": "compile-c",
+      "exit_code": 1,
+      "elapsed_seconds": 7.55,
+      "log": "compile-c.log"
+    }
+  ],
+  "http_component_tested": false,
+  "compiler_backend": "TeaVM 0.16 C + wasi-sdk 34",
+  "compatibility_extension": true,
+  "classlib_extension": true,
+  "failed_gate": "Java to C compilation",
+  "missing_api_diagnostics": 17
+}

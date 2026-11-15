@@ -3,16 +3,18 @@
 Private, isolated feasibility tests for **Java 25 and actual Guice on standalone WASI**.
 This is not a production runtime or a claim that GuicedEE services already run on WebAssembly.
 
-**Current result:** the new TeaVM 0.16 C → wasi-sdk route runs Java, selected reflection operations, heap/GC,
-array cloning and timers in standalone Wasmtime. Actual Guice remains blocked by missing Java APIs, even with
-the isolated reflection-only compatibility profile. See [the compatibility experiment](docs/c-wasi-compatibility.md)
-and [the original baseline](docs/results-2026-11-15.md).
+**Current result:** the TeaVM 0.16 C → wasi-sdk route runs Java, selected reflection operations, heap/GC,
+array cloning, timers, and a tested subset of queue/atomic/lock operations in standalone Wasmtime.
+Actual Guice remains blocked: the new class-library profile reduces its missing-API diagnostics from 28 to 17.
+See [the class-library continuation](docs/classlib-compatibility.md), [the C/WASI experiment](docs/c-wasi-compatibility.md)
+and [the original baseline](docs/results-2026-11-15.md). The [Native Image assessment](docs/native-image-route.md)
+also covers the existing executable, Web Image and LLVM-intermediate alternatives.
 
 ## Gates
 
 | Probe | What it verifies | What it does not establish |
 | --- | --- | --- |
-| `jvm` | All five tests work on the JVM, including injection, scopes, interception, reflection and runtime checks | WASI compatibility |
+| `jvm` | All six tests work on the JVM, including injection, scopes, interception, reflection, runtime and concurrency checks | WASI compatibility |
 | `baseline` | Java 25 bytecode compiles to WASI and runs in Wasmtime: allocation, collections, exceptions and stdout | HTTP/component interfaces or Guice |
 | `guice-minimal` | Constructor injection with no application interceptor or custom scope registration | Full Guice functionality |
 | `guice` | The same Guice probe compiles and runs under WASI | Full GuicedEE bootstrap, Vert.x CallScoper or integrations |
@@ -21,6 +23,8 @@ and [the original baseline](docs/results-2026-11-15.md).
 | `c-reflection` | Reflective constructor/method invocation, constructor annotations and generic field metadata | Complete JDK reflection or Guice |
 | `c-guice-minimal` | Unmodified Guice constructor probe through the new C route | Full framework compatibility |
 | `c-guice-compat` | Real Guice with explicit reflection-only compiler substitutions | Interception, which this separate profile rejects |
+| `c-concurrency` | FIFO queue/iterator behavior, identity CAS/retry, owner-aware reentrant locking across cooperative threads, and explicit unsupported-operation checks | Shared-memory threads, blocking contention or conditions |
+| `c-guice-classlib` | Reflection-only Guice with the optional queue/atomic/lock library extension | Full Guice, HTTP or complete JDK concurrency |
 
 Each gate returns nonzero on compilation failure, runtime failure, timeout, or missing success output.
 The workflow keeps failed gates red and uploads their logs. A working baseline must not mask a failed Guice probe.
@@ -41,6 +45,8 @@ python scripts/run_probe.py c-runtime
 python scripts/run_probe.py c-reflection
 python scripts/run_probe.py c-guice-minimal
 python scripts/run_probe.py c-guice-compat
+python scripts/run_probe.py c-concurrency
+python scripts/run_probe.py c-guice-classlib
 ```
 
 Logs and machine-readable results are under `target/evidence/<probe>`; Wasm output is under `target/wasi/<probe>`.

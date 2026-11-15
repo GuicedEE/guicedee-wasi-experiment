@@ -1,0 +1,2 @@
+WASI_CONCURRENCY_LIMITS_OK blocking timed condition fair rejected
+WASI_CONCURRENCY_OK queue identity-cas update-retry lock-owner cooperative-thread

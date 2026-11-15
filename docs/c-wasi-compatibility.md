@@ -1,5 +1,8 @@
 # C-to-WASI compatibility experiment
 
+This records the initial C-route milestone. See the later [class-library continuation](classlib-compatibility.md)
+for queue, atomic-array and restricted-lock support, and the current Guice diagnostic count.
+
 The TeaVM 0.16 C backend plus wasi-sdk 34 provides a working standalone-WASI route for selected Java reflection
 and runtime operations. **Actual Guice still does not compile**, including the new reflection-only profile.
 The published GuicedEE dependency remains 2.5.1; no DevSuite framework source was modified.

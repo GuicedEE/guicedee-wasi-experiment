@@ -5,10 +5,14 @@ import com.guicedee.wasi.experiment.GuiceProbe;
 import com.guicedee.wasi.experiment.GuiceMinimalProbe;
 import com.guicedee.wasi.experiment.ReflectionProbe;
 import com.guicedee.wasi.experiment.RuntimeProbe;
+import com.guicedee.wasi.experiment.ConcurrencyProbe;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProbeTest {
+    @Test void concurrencyOperationsWorkOnJvm() throws Exception {
+        assertEquals("WASI_CONCURRENCY_OK queue identity-cas update-retry lock-owner cooperative-thread", ConcurrencyProbe.verify());
+    }
     @Test void reflectiveOperationsWorkOnJvm() throws Exception {
         assertEquals("WASI_REFLECTION_OK constructor annotation generic-field method", ReflectionProbe.verify());
     }

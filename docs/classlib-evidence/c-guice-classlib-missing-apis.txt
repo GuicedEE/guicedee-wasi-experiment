@@ -1,0 +1,17 @@
+[ERROR] Method java.lang.reflect.Constructor.getAnnotatedParameterTypes()[Ljava/lang/reflect/AnnotatedType; was not found
+[ERROR] Method java.lang.Class.getGenericInterfaces()[Ljava/lang/reflect/Type; was not found
+[ERROR] Method java.lang.Class.getGenericSuperclass()Ljava/lang/reflect/Type; was not found
+[ERROR] Method java.util.concurrent.ConcurrentHashMap.newKeySet()Ljava/util/concurrent/ConcurrentHashMap$KeySetView; was not found
+[ERROR] Method java.lang.reflect.Field.getAnnotatedType()Ljava/lang/reflect/AnnotatedType; was not found
+[ERROR] Method java.lang.reflect.Method.getAnnotatedParameterTypes()[Ljava/lang/reflect/AnnotatedType; was not found
+[ERROR] Method java.lang.Class.getAnnotatedSuperclass()Ljava/lang/reflect/AnnotatedType; was not found
+[ERROR] Method com.google.common.util.concurrent.ListenableFuture.isDone()Z was not found
+[ERROR] Class com.google.common.util.concurrent.ListenableFuture implements java.util.concurrent.Future, which is missing in the classpath
+[ERROR] Class java.util.concurrent.Future was not found
+[ERROR] Method com.google.common.util.concurrent.ListenableFuture.isCancelled()Z was not found
+[ERROR] Class java.util.concurrent.locks.LockSupport was not found
+[ERROR] Class sun.misc.Unsafe was not found
+[ERROR] Method java.lang.reflect.Constructor.getParameters()[Ljava/lang/reflect/Parameter; was not found
+[ERROR] Class java.lang.reflect.Parameter was not found
+[ERROR] Method java.lang.reflect.Method.getParameters()[Ljava/lang/reflect/Parameter; was not found
+[ERROR] Method java.lang.reflect.Method.getDefaultValue()Ljava/lang/Object; was not found

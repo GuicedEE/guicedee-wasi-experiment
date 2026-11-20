@@ -31,7 +31,7 @@ def download(name, url, sha):
         raise RuntimeError(f"Cached checksum mismatch: {name}")
     return path
 
-def prepare_tools(directory):
+def prepare_tools(directory, world="probe.wit"):
     system = platform.system()
     if platform.machine().lower() not in ("amd64", "x86_64") or system not in ("Windows", "Linux"):
         raise RuntimeError("HTTP probe tooling currently supports Windows/Linux x86_64")
@@ -45,8 +45,9 @@ def prepare_tools(directory):
         else:
             with tarfile.open(archive) as source: source.extractall(ROOT / ".tools", filter="data")
         binaries[name] = ROOT / ".tools" / folder / (name + (".exe" if system == "Windows" else ""))
-    binaries["adapter"] = download("wasi_snapshot_preview1.command.wasm",
-        "https://github.com/bytecodealliance/wasmtime/releases/download/v50.0.1/wasi_snapshot_preview1.command.wasm", ADAPTER_SHA)
+    if world == "probe.wit":
+        binaries["adapter"] = download("wasi_snapshot_preview1.command.wasm",
+            "https://github.com/bytecodealliance/wasmtime/releases/download/v50.0.1/wasi_snapshot_preview1.command.wasm", ADAPTER_SHA)
     archive = download("wasi-http-v0.2.0.tar.gz", "https://codeload.github.com/WebAssembly/wasi-http/tar.gz/refs/tags/v0.2.0", WIT_SHA)
     wit = directory / "wit"
     wit.mkdir(parents=True, exist_ok=True)
@@ -58,5 +59,5 @@ def prepare_tools(directory):
             if not destination.resolve().is_relative_to(wit.resolve()): raise RuntimeError("Invalid WIT path")
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(source.extractfile(member).read())
-    shutil.copyfile(ROOT / "http/probe.wit", wit / "probe.wit")
+    shutil.copyfile(ROOT / "http" / world, wit / world)
     return binaries, wit

@@ -14,6 +14,7 @@ from wasi_sdk_tool import install as install_sdk
 from prepare_c import prepare
 
 PROBES = {
+    "c-inbound-json": ("InboundCalculation", None),
     "c-http": ("HttpProbe", "WASI_HTTP_OK get post status transport timeout bounded-body cleanup"),
     "c-typed-http": ("TypedHttpProbe", "WASI_TYPED_HTTP_OK jackson3 real-guice get post errors cleanup"),
     "c-guice-scopes": ("GuiceScopeProbe", "WASI_GUICE_SCOPES_OK providers singleton scope cleanup failures isolation"),
@@ -32,6 +33,9 @@ PROBES = {
 
 
 def run(probe):
+    if probe == "c-inbound-json":
+        from run_inbound_probe import run as run_inbound
+        return run_inbound()
     if probe in ("c-http", "c-typed-http"):
         from run_http_probe import run as run_http
         return run_http(typed=probe == "c-typed-http")

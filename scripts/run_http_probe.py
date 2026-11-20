@@ -106,6 +106,28 @@ class Fixture:
             if row["method"] != ("POST" if row["path"] == "/post" else "GET"): raise RuntimeError("Wire method mismatch")
         return dict(counts)
 
+
+def prepare_typed_build(maven, step, result):
+    from build_jackson_profile import VERSION
+    step("build-jackson-profile", [sys.executable, "scripts/build_jackson_profile.py"])
+    for artifact_name in ("jackson-core", "jackson-databind"):
+        step("install-" + artifact_name, [*maven, "org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file",
+            f"-Dfile=target/jackson-profile/{artifact_name}-{VERSION}.jar", f"-DpomFile=target/jackson-profile/{artifact_name}.pom"])
+    maven.append(f"-Djackson.version={VERSION}")
+    maven.append("-Dguicedee.wasi.typed=true")
+    result["jackson_profile"] = json.loads((ROOT / "target/jackson-profile/profile.json").read_text())
+    for module in ("classlib", "compatibility", "metadata"):
+        step("build-" + module, [*maven, "-f", module + "/pom.xml", "-DskipTests", "install"])
+    revision = 3
+    compiler_version = f"0.16.0-guicedee-wasi-{revision}"
+    step("build-compiler-fix", [sys.executable, "scripts/build_teavm_fix.py", "--revision", revision])
+    step("install-compiler-fix", [*maven, "org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file",
+        f"-Dfile=target/compiler-fix/teavm-core-{compiler_version}.jar", "-DpomFile=target/compiler-fix/pom.xml"])
+    maven.append(f"-Dcompiler.fix.version={compiler_version}")
+    result["compiler_backport_details"] = json.loads((ROOT / "target/compiler-fix/backport.json").read_text())
+    return "wasi,classlib-compat,guice-compat,metadata-compat,compiler-fix"
+
+
 def run(typed=False):
     probe = "c-typed-http" if typed else "c-http"
     if typed:
@@ -148,24 +170,7 @@ def run(typed=False):
                  "-Dmaven.repo.local=" + str(ROOT / ".cache/m2")]
         profiles, main, compiler_env = "wasi", "HttpProbe", None
         if typed:
-            from build_jackson_profile import VERSION
-            step("build-jackson-profile", [sys.executable, "scripts/build_jackson_profile.py"])
-            for artifact_name in ("jackson-core", "jackson-databind"):
-                step("install-" + artifact_name, [*maven, "org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file",
-                    f"-Dfile=target/jackson-profile/{artifact_name}-{VERSION}.jar", f"-DpomFile=target/jackson-profile/{artifact_name}.pom"])
-            maven.append(f"-Djackson.version={VERSION}")
-            maven.append("-Dguicedee.wasi.typed=true")
-            result["jackson_profile"] = json.loads((ROOT / "target/jackson-profile/profile.json").read_text())
-            for module in ("classlib", "compatibility", "metadata"):
-                step("build-" + module, [*maven, "-f", module + "/pom.xml", "-DskipTests", "install"])
-            revision = 3
-            compiler_version = f"0.16.0-guicedee-wasi-{revision}"
-            step("build-compiler-fix", [sys.executable, "scripts/build_teavm_fix.py", "--revision", revision])
-            step("install-compiler-fix", [*maven, "org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file",
-                f"-Dfile=target/compiler-fix/teavm-core-{compiler_version}.jar", "-DpomFile=target/compiler-fix/pom.xml"])
-            maven.append(f"-Dcompiler.fix.version={compiler_version}")
-            result["compiler_backport_details"] = json.loads((ROOT / "target/compiler-fix/backport.json").read_text())
-            profiles = "wasi,classlib-compat,guice-compat,metadata-compat,compiler-fix"
+            profiles = prepare_typed_build(maven, step, result)
             main = "TypedHttpProbe"
             compiler_env = os.environ.copy()
             compiler_env["MAVEN_OPTS"] = compiler_env.get("MAVEN_OPTS", "") + " -Xmx8g -Xss16m"

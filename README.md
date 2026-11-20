@@ -7,6 +7,8 @@ This is not a production runtime or a claim that GuicedEE services already run o
 constructor and scope probes in Wasmtime. Two separate WASI HTTP components
 exercise raw outbound requests and a Guice-injected Jackson DTO client against
 a loopback fixture. See the [standalone proof and clean-build instructions](docs/standalone-wasi-proof.md).
+A separate [inbound JSON reactor](docs/inbound-json-proof.md) exercises one
+bounded Guice-injected route behind WASI HTTP.
 
 The [class-library continuation](docs/classlib-compatibility.md),
 [C/WASI experiment](docs/c-wasi-compatibility.md), and

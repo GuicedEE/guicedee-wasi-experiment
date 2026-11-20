@@ -22,7 +22,10 @@ public final class ProbeReflectionPolicy implements ReflectionPolicy {
         return name.equals("com.guicedee.wasi.experiment.TypedHttpProbe$Clients")
             || name.equals("com.guicedee.wasi.experiment.TypedHttpProbe$Application")
             || name.equals("com.guicedee.wasi.experiment.TypedHttpProbe$Bindings")
-            || name.equals("com.guicedee.wasi.experiment.WasiHttpTransport");
+            || name.equals("com.guicedee.wasi.experiment.WasiHttpTransport")
+            || name.equals("com.guicedee.wasi.experiment.InboundCalculation$Handler")
+            || name.equals("com.guicedee.wasi.experiment.InboundCalculation$Calculator")
+            || name.equals("com.guicedee.wasi.experiment.InboundCalculation$Limits");
     }
     private static boolean applicationInput(IntrospectClass<?> cls) {
         if (cls == null || !cls.name().startsWith("com.guicedee.wasi.experiment.")) return false;

@@ -1,5 +1,6 @@
 module com.guicedee.wasi.experiment {
     requires static teavm.interop;
+    requires tools.jackson.core;
     requires tools.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires com.google.guice;

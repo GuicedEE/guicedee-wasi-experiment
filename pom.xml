@@ -9,9 +9,12 @@
     <maven.compiler.release>25</maven.compiler.release>
     <maven.compiler.source>25</maven.compiler.source>
     <maven.compiler.target>25</maven.compiler.target>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <guicedee.version>2.5.1</guicedee.version>
+    <jackson.version>3.3.0</jackson.version>
     <teavm.version>0.13.0</teavm.version>
+    <compiler.fix.version>0.16.0-guicedee-wasi-2</compiler.fix.version>
     <junit.version>6.1.3</junit.version>
     <mockito.version>5.24.0</mockito.version>
     <probe>baseline</probe>
@@ -27,6 +30,10 @@
     </dependency>
   </dependencies></dependencyManagement>
   <dependencies>
+    <dependency><groupId>tools.jackson.core</groupId><artifactId>jackson-databind</artifactId><version>${jackson.version}</version></dependency>
+    <dependency><groupId>tools.jackson.core</groupId><artifactId>jackson-core</artifactId><version>${jackson.version}</version></dependency>
+    <dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-annotations</artifactId><version>2.22</version></dependency>
+    <dependency><groupId>org.teavm</groupId><artifactId>teavm-interop</artifactId><version>${teavm.version}</version><scope>provided</scope></dependency>
     <dependency><groupId>com.guicedee.modules.services</groupId><artifactId>guice</artifactId></dependency>
     <dependency><groupId>jakarta.inject</groupId><artifactId>jakarta.inject-api</artifactId><version>2.0.1</version></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>${junit.version}</version><scope>test</scope></dependency>
@@ -66,5 +73,16 @@
   </profile><profile>
     <id>classlib-compat</id>
     <dependencies><dependency><groupId>com.guicedee.experimental</groupId><artifactId>wasi-classlib</artifactId><version>0.1.0-SNAPSHOT</version><scope>provided</scope></dependency></dependencies>
+  </profile><profile>
+    <id>metadata-compat</id>
+    <dependencies><dependency><groupId>com.guicedee.experimental</groupId><artifactId>wasi-reflection-metadata</artifactId><version>0.1.0-SNAPSHOT</version><scope>provided</scope></dependency></dependencies>
+  </profile><profile>
+    <id>compiler-fix</id>
+    <build><plugins><plugin>
+      <groupId>org.teavm</groupId><artifactId>teavm-maven-plugin</artifactId><version>${teavm.version}</version>
+      <dependencies><dependency>
+        <groupId>org.teavm</groupId><artifactId>teavm-core</artifactId><version>${compiler.fix.version}</version>
+      </dependency></dependencies>
+    </plugin></plugins></build>
   </profile></profiles>
 </project>

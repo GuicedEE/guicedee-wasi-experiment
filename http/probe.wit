@@ -1,0 +1,4 @@
+package guicedee:probe;
+world outbound-probe {
+    import wasi:http/outgoing-handler@0.2.0;
+}

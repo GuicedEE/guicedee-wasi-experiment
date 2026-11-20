@@ -3,18 +3,26 @@
 Private, isolated feasibility tests for **Java 25 and actual Guice on standalone WASI**.
 This is not a production runtime or a claim that GuicedEE services already run on WebAssembly.
 
-**Current result:** the TeaVM 0.16 C → wasi-sdk route runs Java, selected reflection operations, heap/GC,
-array cloning, timers, and a tested subset of queue/atomic/lock operations in standalone Wasmtime.
-Actual Guice remains blocked: the new class-library profile reduces its missing-API diagnostics from 28 to 17.
-See [the class-library continuation](docs/classlib-compatibility.md), [the C/WASI experiment](docs/c-wasi-compatibility.md)
-and [the original baseline](docs/results-2026-11-15.md). The [Native Image assessment](docs/native-image-route.md)
-also covers the existing executable, Web Image and LLVM-intermediate alternatives.
+**Current result.** The TeaVM 0.16 C → wasi-sdk route runs the real Guice
+constructor and scope probes in Wasmtime. Two separate WASI HTTP components
+exercise raw outbound requests and a Guice-injected Jackson DTO client against
+a loopback fixture. See the [standalone proof and clean-build instructions](docs/standalone-wasi-proof.md).
+
+The [class-library continuation](docs/classlib-compatibility.md),
+[C/WASI experiment](docs/c-wasi-compatibility.md), and
+[original baseline](docs/results-2026-11-15.md) record the earlier gates.
+The [Native Image assessment](docs/native-image-route.md) covers the executable,
+Web Image, and LLVM-intermediate alternatives.
 
 ## Gates
 
 | Probe | What it verifies | What it does not establish |
 | --- | --- | --- |
-| `jvm` | All six tests work on the JVM, including injection, scopes, interception, reflection, runtime and concurrency checks | WASI compatibility |
+| `jvm` | JVM checks for injection, scopes, reflection, concurrency, and selected DTO bindings | WASI compatibility |
+| `c-guice-metadata` | Real Guice constructor injection through the reflection and metadata profile | Interception or framework bootstrap |
+| `c-guice-scopes` | Guice providers, singleton and request scope, failure cleanup, and cooperative request isolation | Host-parallel scheduling or Vert.x scopes |
+| `c-http` | Raw WASI HTTP component with loopback wire verification and resource controls | Inbound HTTP or Guice request handling |
+| `c-typed-http` | Guice-injected Jackson 3 DTO client in a separate outbound component | Production reactive REST client or unrestricted Jackson |
 | `baseline` | Java 25 bytecode compiles to WASI and runs in Wasmtime: allocation, collections, exceptions and stdout | HTTP/component interfaces or Guice |
 | `guice-minimal` | Constructor injection with no application interceptor or custom scope registration | Full Guice functionality |
 | `guice` | The same Guice probe compiles and runs under WASI | Full GuicedEE bootstrap, Vert.x CallScoper or integrations |
@@ -30,6 +38,8 @@ Each gate returns nonzero on compilation failure, runtime failure, timeout, or m
 The workflow keeps failed gates red and uploads their logs. A working baseline must not mask a failed Guice probe.
 
 ## Reproduce
+
+For a clean run of the four continuation gates, use the [bootstrap and run instructions](docs/standalone-wasi-proof.md). The commands below cover the earlier probes.
 
 Requires JDK 25 and Python 3.12+ on x86-64 Windows or Linux. The Maven wrapper downloads Maven 4.0.0-rc-7.
 The script downloads Wasmtime 50.0.1 into `.tools` and checks the official release archive SHA-256.
@@ -69,15 +79,9 @@ Use `mvnw.cmd` on Windows. For Guice, use `-Dprobe=guice` and `-Dprobe.mainClass
 - Original probes pin TeaVM **0.13.0** because it supports Java 25 and exposes `WEBASSEMBLY_WASI`. The separate `c-*` probes use TeaVM **0.16.0** C output, our bounded platform adapters, and wasi-sdk **34**. Neither route uses a JavaScript host.
 - The Guice dependency is `com.guicedee.modules.services:guice`, not a hand-written container. All probes use the same source on JVM and WASI.
 - The small explicit request scope tests Guice's `Scope` API. It is not a substitute for GuicedEE's Vert.x-backed `CallScoper`.
-- This initial compiler/runtime gate emits a WASI command module, **not a WASI HTTP component**. No HTTP service, browser, or JavaScript host is involved.
+- The Guice probes emit WASI command modules. The outbound probes emit WASI HTTP components and use native loopback fixtures.
 - Maven 4, Java 25, GuicedEE BOM, separate JPMS main/test modules, and test package conventions follow the GuicedEE Creator skill. Its full-framework bootstrap check is deliberately inapplicable here: these substrate probes must not start Vert.x through `GuiceApplication` before the compiler/Guice gates have been assessed.
 - No existing framework source, repository, submodule registration, release workflow or default Maven plugin version is changed.
-
-## Next gate
-
-Only after the Java and Guice gates pass should this grow a pinned WASI HTTP/component adapter and a GuicedEE request lifecycle.
-That requires request-context isolation/cleanup, async completion, host capabilities, and a separate decision on Vert.x/Netty.
-An HTTP process wrapper around the command module would not prove WASI HTTP compatibility.
 
 ## Upstream references
 

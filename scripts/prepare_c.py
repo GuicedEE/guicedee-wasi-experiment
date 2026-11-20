@@ -8,12 +8,13 @@ def prepare(directory):
     source = directory / 'all.c'
     code = source.read_text()
     for before, after in [('#include "fiber.c"', '#include "wasi_fiber.c"'),
-                          ('#include "file.c"', '/* Filesystem runtime excluded; references must fail linking. */')]:
+                          ('#include "file.c"', '#include "wasi_properties.c" /* File operations remain excluded. */')]:
         if code.count(before) != 1:
             raise RuntimeError(f'Unexpected TeaVM generated source: {before}')
         code = code.replace(before, after)
     (directory / 'wasi_all.c').write_text(code)
     shutil.copyfile(ROOT / 'runtime/wasi_fiber.c', directory / 'wasi_fiber.c')
+    shutil.copyfile(ROOT / 'runtime/wasi_properties.c', directory / 'wasi_properties.c')
     memory = (directory / 'memory.c').read_text()
     if memory.count('#if defined(__EMSCRIPTEN__)') != 1:
         raise RuntimeError('Unexpected TeaVM memory implementation')

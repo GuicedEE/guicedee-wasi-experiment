@@ -1,1 +1,5 @@
 com.guicedee.wasi.compiler.GuiceReflectionMode
+com.guicedee.wasi.compiler.GuavaFutureMode
+com.guicedee.wasi.compiler.MonitorQueueMode
+com.guicedee.wasi.compiler.FiberFailureMode
+com.guicedee.wasi.compiler.SubnormalNumberMode

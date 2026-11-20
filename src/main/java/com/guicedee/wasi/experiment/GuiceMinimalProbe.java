@@ -18,5 +18,14 @@ public final class GuiceMinimalProbe {
         }
         return "WASI_GUICE_MINIMAL_OK constructor";
     }
-    public static void main(String[] args) { System.out.println(verify()); }
+    public static void main(String[] args) throws Throwable {
+        try { System.out.println(verify()); }
+        catch (Throwable failure) {
+            System.err.println("GUICE_PROBE_FAILURE " + failure.getClass().getName());
+            try { System.err.println(failure.getMessage()); }
+            catch (Throwable rendering) { System.err.println("GUICE_MESSAGE_FAILURE " + rendering.getClass().getName()); }
+            failure.printStackTrace();
+            throw failure;
+        }
+    }
 }
